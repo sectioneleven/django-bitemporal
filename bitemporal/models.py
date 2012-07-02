@@ -31,18 +31,17 @@ class BitemporalManager(models.Manager):
         """Return an instance of `BitemporalQuerySet`."""
         return BitemporalQuerySet(self.model, using=self._db)
 
-    def __getattr__(self, attr, *args):
-        """Return attributes from queryset."""
-        try:
-            return getattr(self.__class__, attr, *args)
-        except (AttributeError,) as e:
-            try:
-                # return attribute from queryset
-                return getattr(self.get_query_set(), attr, *args)
-            except AttributeError:
-                # attribute not found in queryset instance;
-                # raise original `AttributeError` exception
-                raise e
+    #
+    # Proxies to queryset
+    #
+
+    def valid(self):
+        """Return queryset filtered to current valid objects."""
+        return self.get_query_set().valid()
+
+    def valid_on(self, date_time):
+        """Return queryset filtered to objects valid on given datetime."""
+        return self.get_query_set().valid_on(date_time)
 
 
 class BitemporalModel(models.Model):
