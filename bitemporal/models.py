@@ -47,10 +47,13 @@ class BitemporalManager(models.Manager):
 class BitemporalModel(models.Model):
     """Base model class for bitemporal models."""
 
-    valid_datetime_start = models.DateTimeField()
-    valid_datetime_end = models.DateTimeField(blank=True, null=True)
-    transaction_datetime_start = models.DateTimeField(auto_now_add=True)
-    transaction_datetime_end = models.DateTimeField(blank=True, null=True)
+    valid_datetime_start = models.DateTimeField(db_index=True)
+    valid_datetime_end = models.DateTimeField(
+        blank=True, null=True, db_index=True)
+    transaction_datetime_start = models.DateTimeField(
+        auto_now_add=True, db_index=True)
+    transaction_datetime_end = models.DateTimeField(
+        blank=True, null=True, db_index=True)
 
     objects = BitemporalManager()
 
